@@ -240,23 +240,28 @@ export default function App() {
       });
     }
 
-    const newIngreso = {
-      id: `ing-${Date.now()}`,
-      folio,
-      fecha: getTodayStr(),
-      alumno: alumno.nombre,
-      clase: alumno.clase,
-      monto: data.abonado,
-      concepto: `Extra: ${data.concepto}`,
-      tipo: 'extra' as const,
-    };
+const diasAtraso = calcularDiasAtraso(alumno.fecha);
+const moraCalculada = calcularMora(alumno.fecha, (db.config?.moraPorDia || 20) as number);
+const esZumba = alumno.clase.toLowerCase().includes('zumba');
 
-    setDb((prev) => ({
-      ...prev,
-      alumnos: prev.alumnos.map((a) => (a.id === data.alumnoId ? { ...a, extras: newExtras } : a)),
-      ingresos: [newIngreso, ...prev.ingresos],
-    }));
+const newIngreso = {
+  id: `ing-${Date.now()}`,
+  folio,
+  fecha: getTodayStr(),
+  alumno: alumno.nombre,
+  clase: alumno.clase,
+  monto: (data.abonado + moraCalculada) as number,
+  concepto: `Extra: ${data.concepto}`,
+  tipo: 'extra' as const,
+};
 
+setDb((prev) => ({
+  ...prev,
+  alumnos: prev.alumnos.map((a) => (a.id === data.alumnoId ? { ...a, extras: newExtras } : a)),
+  ingresos: [newIngreso, ...prev.ingresos],
+  gastos: esZumba ? [...prev.gastos, { id: `g-${Date.now()}`, fecha: getTodayStr(), concepto: `Pago Norma Zumba - ${alumno.nombre}`, monto: Math.round(data.abonado * 0.6), categoria: 'profesores' as const, metodo: 'efectivo' as const }] : prev.gastos,
+}));
+}));
     setReciboActual({
       folio,
       fecha: getTodayStr(),
