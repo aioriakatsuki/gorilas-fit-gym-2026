@@ -18,7 +18,7 @@ import {
   saveDatabase,
   exportDatabaseJSON,
 } from './utils/storage';
-import { getTodayStr, diasRestantes } from './utils/date';
+import { getTodayStr, diasRestantes, calcularDiasAtraso, calcularMora } from './utils/date';
 
 // Components
 import { Header } from './components/Header';
