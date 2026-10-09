@@ -1,103 +1,113 @@
-export type TipoAlumno = 'nuevo' | 'antiguo' | 'reingreso';
-export type StatusAlumno = 'activo' | 'baja';
-export type TipoCobro = 'mensual' | 'porClase' | 'unico';
-export type TipoPromo = 'paquete' | '2x1' | 'descuento' | 'reinscripcion' | 'clases';
+exportar tipo TipoAlumno = 'nuevo' | 'antiguo' | 'reingreso';
+exportar tipo EstadoAlumno = 'activo' | 'baja';
+exportar tipo TipoCobro = 'mensual' | 'porClase' | 'única';
+exportar tipo TipoPromo = 'paquete' | '2x1' | 'descuento';
 
-export interface ExtraItem {
-  id?: string;
-  concepto: string;
-  total: number;
-  abonado: number;
-  fecha?: string;
+exportar interfaz Artículo adicional {
+  identificación?:cadena;
+  concepto:cadena;
+  total:número;
+  abonado:número;
+  fecha?:cadena;
 }
 
-export interface Alumno {
-  id: number;
-  nombre: string;
-  clase: string;
-  monto: number;       // Base price of activity
-  montoReal: number;   // What student actually pays per period
-  whats: string;
-  fecha: string;       // Next expiration date (YYYY-MM-DD)
-  ingreso: string;     // Join date (YYYY-MM-DD)
-  status: StatusAlumno;
-  tipoAlumno: TipoAlumno;
-  promoAplicada: string | null;
-  extras: ExtraItem[];
-  notas?: string;
+exportar interfaz Antiguo alumno {
+  identificación:número;
+  nombre:cadena;
+  clase:cadena;
+  monto:número;
+  montoReal:número;
+  qué:cadena;
+  fecha:cadena;
+  ingresar:cadena;
+  estado:EstadoAlumno;
+  tipoAlumno:TipoAlumno;
+  promoAplicada:cadena | nulo;
+  extras:Artículo adicional[];
+  notas?:cadena;
+  whats?:cadena;
 }
 
-export interface Promo {
-  id: number;
-  nombre: string;
-  tipo: TipoPromo;
-  tipoCobro: TipoCobro;
-  actividad: string; // 'TAEKWONDO' | 'ZUMBA' | 'TODAS' etc.
-  precio: number;
-  insc?: number;
-  mens?: number;
-  uniforme?: number;
-  desc: string;
-  hasta: string;     // Expiration date (YYYY-MM-DD)
-  editable?: boolean;
+exportar interfaz Promoción {
+  identificación:número;
+  nombre:cadena;
+  tipo:TipoPromo;
+  tipoCobro:TipoCobro;
+  actividad:cadena;
+  precio:número;
+  insc?:número;
+  de los hombres?:número;
+  uniforme?:número;
+  desc?:cadena;
+  hasta:cadena;
+  editable?:booleano;
 }
 
-export interface Producto {
-  id?: number;
-  nombre: string;
-  costo: number;
-  venta: number;
-  stock: number;
-  categoria?: string;
+exportar interfaz Producto {
+  identificación?:número;
+  nombre:cadena;
+  costo:número;
+  venta:número;
+  existencias:número;
+  categorias?:cadena;
 }
 
-export interface MovimientoIngreso {
-  id?: string;
-  folio?: string;
-  fecha: string;
-  alumno: string;
-  clase: string;
-  monto: number;
-  concepto?: string;
-  ganancia?: number;
-  tipo?: 'mensualidad' | 'producto' | 'extra' | 'inscripcion' | 'otro';
+exportar interfaz MovimientoIngreso {
+  identificación?:cadena;
+  fol?:cadena;
+  fecha:cadena;
+  alumno:cadena;
+  clase:cadena;
+  monto:número;
+  concepto?:cadena;
+  ganancia?:número;
+  tipo?:'mensualidad' | 'producto' | 'extra' | 'inscripcion';
 }
 
-export interface MovimientoGasto {
-  id?: string;
-  fecha: string;
-  concepto: string;
-  monto: number;
-  categoria?: 'renta' | 'servicios' | 'profesores' | 'mercancia' | 'mantenimiento' | 'otro';
+exportar interfaz MovimientoGasto {
+  identificación?:cadena;
+  fecha:cadena;
+  concepto:cadena;
+  monto:número;
+  categorias?:'renta' | 'servicios' | 'profesores' | 'mercancia' | 'otros';
+  auto?:booleano;
 }
 
-export interface Actividad {
-  nombre: string;
-  tipo: TipoCobro;
-  monto: number;
-  profe?: string;
-  porcentaje?: number;
+exportar interfaz Actividad {
+  nombre:cadena;
+  tipo:TipoCobro;
+  monto:número;
+  profesor?:cadena;
+  porcentaje?:número;
 }
 
-export interface ReciboData {
-  folio: string;
-  fecha: string;
-  alumno: string;
-  telefono?: string;
-  clase: string;
-  monto: number;
-  concepto?: string;
-  proxVence?: string;
-  tipoAlumno?: TipoAlumno;
-  detalles?: string;
+exportar interfaz Datos de Recibo {
+  fol:cadena;
+  fecha:cadena;
+  alumno:cadena;
+  teléfono?:cadena;
+  clase:cadena;
+  monto:número;
+  concepto?:cadena;
+  proxVence?:cadena;
+  tipoAlumno?:TipoAlumno;
+  detalles?:cadena;
+  mora?:número;
+  diasAtraso?:número;
 }
 
-export interface GorilasDatabase {
-  actividades: Actividad[];
-  promos: Promo[];
-  productos: Producto[];
-  alumnos: Alumno[];
-  ingresos: MovimientoIngreso[];
-  gastos: MovimientoGasto[];
-  bajas: Alumno[];
+exportar interfaz ConfiguracionGorilas {
+  moraPorDia:número;
+  version?:cadena;
+}
+
+exportar interfaz Base de datos de gorilas {
+  actividades:Actividad[];
+  promociones:Promoción[];
+  productos:Producto[];
+  alumnos:Antiguo alumno[];
+  ingresos:MovimientoIngreso[];
+  gastos:MovimientoGasto[];
+  bajas:Antiguo alumno[];
+  config?:ConfiguracionGorilas;
 }
