@@ -1,0 +1,6 @@
+{
+  "name": "Gorilas Fit V5 - Sistema de Gestión de Gimnasio",
+  "description": "Sistema de administración integral para Gorilas Fit: control de alumnos, cobros, mensualidades, promociones, tienda de productos y caja.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}
