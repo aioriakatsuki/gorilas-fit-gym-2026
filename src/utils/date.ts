@@ -45,3 +45,16 @@ export function formatCurrency(amount: number): string {
     maximumFractionDigits: 0,
   }).format(amount);
 }
+export function calcularDiasAtraso(fechaVenc: string | null): number {
+  if (!fechaVenc) return 0;
+  const h = new Date(); 
+  h.setHours(0, 0, 0, 0);
+  const v = new Date(fechaVenc + 'T00:00:00'); 
+  v.setHours(0, 0, 0, 0);
+  const diff = Math.floor((h.getTime() - v.getTime()) / (1000 * 60 * 60 * 24));
+  return diff > 0 ? diff : 0;
+}
+
+export function calcularMora(fechaVenc: string | null, moraPorDia = 20): number {
+  return calcularDiasAtraso(fechaVenc) * moraPorDia;
+}
