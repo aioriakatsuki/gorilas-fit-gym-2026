@@ -165,35 +165,39 @@ export default function App() {
     });
   };
 
-  const handleCobrarSubmit = (data: {
-    alumnoId: number;
-    monto: number;
-    nuevoVencimiento: string;
-    concepto: string;
-  }) => {
-    const alumno = db.alumnos.find((a) => a.id === data.alumnoId);
-    if (!alumno) return;
+const handleCobrarSubmit = (data: {
+  alumnoId: number;
+  monto: number;
+  nuevoVencimiento: string;
+  concepto: string;
+}) => {
+  const alumno = db.alumnos.find((a) => a.id === data.alumnoId);
+  if (!alumno) return;
 
-    const folio = Date.now().toString().slice(-6);
+  const folio = Date.now().toString().slice(-6);
+  const diasAtraso = calcularDiasAtraso(alumno.fecha);
+  const moraCalculada = calcularMora(alumno.fecha, (db.config?.moraPorDia || 20) as number);
+  const esZumba = alumno.clase.toLowerCase().includes('zumba');
 
-    const newIngreso = {
-      id: `ing-${Date.now()}`,
-      folio,
-      fecha: getTodayStr(),
-      alumno: alumno.nombre,
-      clase: alumno.clase,
-      monto: data.monto,
-      concepto: data.concepto,
-      tipo: 'mensualidad' as const,
-    };
+  const newIngreso = {
+    id: `ing-${Date.now()}`,
+    folio,
+    fecha: getTodayStr(),
+    alumno: alumno.nombre,
+    clase: alumno.clase,
+    monto: (data.monto + moraCalculada) as number,
+    concepto: moraCalculada > 0 ? `${data.concepto} + Mora $${moraCalculada} (${diasAtraso}d)` : data.concepto,
+    tipo: 'mensualidad' as const,
+  };
 
-    setDb((prev) => ({
-      ...prev,
-      alumnos: prev.alumnos.map((a) =>
-        a.id === data.alumnoId ? { ...a, fecha: data.nuevoVencimiento, status: 'activo' } : a
-      ),
-      ingresos: [newIngreso, ...prev.ingresos],
-    }));
+  setDb((prev) => ({
+    ...prev,
+    alumnos: prev.alumnos.map((a) =>
+      a.id === data.alumnoId ? { ...a, fecha: data.nuevoVencimiento } : a
+    ),
+    ingresos: [newIngreso, ...prev.ingresos],
+    gastos: esZumba ? [...prev.gastos, { id: `g-${Date.now()}`, fecha: getTodayStr(), concepto: `Pago Norma Zumba - ${alumno.nombre}`, monto: Math.round((data.monto + moraCalculada) * 0.6), categoria: 'profesores' as const, metodo: 'efectivo' as const }] : prev.gastos,
+  }));
 
     // Trigger digital receipt
     setReciboActual({
